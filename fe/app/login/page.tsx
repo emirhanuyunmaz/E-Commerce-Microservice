@@ -1,4 +1,4 @@
-import { LoginCard } from "@/components/fe/LoginCard";
+import LoginCard from "@/components/fe/LoginCard";
 
 
 export default function Page(){
