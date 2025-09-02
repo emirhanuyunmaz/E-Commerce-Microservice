@@ -34,12 +34,16 @@ export default function Navbar(){
                 <Input type="text" placeholder="Search" />
                 <div className="flex gap-2">
                 
-                    <Button variant={"link"}>
-                        <Heart color="black"/>
+                    <Button variant={"link"} asChild>
+                        <Link href={`/wishlish`}>
+                            <Heart color="black"/>
+                        </Link>
                     </Button>
                     
-                    <Button variant={"link"}>
-                        <ShoppingCart  color="black"/>
+                    <Button variant={"link"} asChild>
+                        <Link href={`/buying`}>
+                            <ShoppingCart  color="black"/>
+                        </Link>
                     </Button>
                 
                 </div>

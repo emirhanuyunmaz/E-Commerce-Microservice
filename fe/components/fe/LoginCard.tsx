@@ -67,45 +67,45 @@ export default function LoginCard() {
         </CardAction>
       </CardHeader>
       <CardContent>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-6">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Email" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                            <Input placeholder="Password" {...field} />                          
-                        </FormControl>
-                        <FormMessage />
-                        <a
-                          href="#"
-                          className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
-                          Forgot your password?
-                        </a>
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="submit" className="w-full text-white">
-                      Login
-                  </Button>
-                </form>
-              </Form>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-6">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                      <Input placeholder="Password" {...field} />                          
+                  </FormControl>
+                  <FormMessage />
+                  <a
+                    href="#"
+                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                    Forgot your password?
+                  </a>
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full text-white">
+                Login
+            </Button>
+          </form>
+        </Form>
 
       </CardContent>
       <CardFooter className="flex-col gap-2">
