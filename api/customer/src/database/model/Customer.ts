@@ -1,12 +1,15 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const CustomerSchema =new Schema({
-    email:String,
-    password:String,
+const CustomerSchema = new Schema(
+  {
+    email: String,
+    password: String,
     phone: String,
-    
-},{timestamps: true})
+    isAdmin: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
 
-export const Customer = mongoose.model("customer" , CustomerSchema) 
+export const Customer = mongoose.model('customer', CustomerSchema);

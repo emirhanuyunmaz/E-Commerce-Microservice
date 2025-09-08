@@ -22,8 +22,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { useDenemeQuery, useLoginMutation } from "@/store/customer/customerApi"
-
+import { useLoginMutation } from "@/store/customer/customerApi"
+import { ToastError, ToastSuccess } from "@/lib/toast"
+import {setCookie} from 'cookies-next';
 const FormSchema = z.object({
   email: z.string().min(5, {
     message: "Email must be at least 5 characters.",
@@ -35,11 +36,7 @@ const FormSchema = z.object({
 
 export default function LoginCard() {
 
-  const deneme = useDenemeQuery("")
   const [login,resLogin] = useLoginMutation() 
-
-  console.log(deneme.data);
-  
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -54,7 +51,10 @@ export default function LoginCard() {
       await login(data).unwrap()
       .then((res) => {
         console.log("RES:",res);
+        ToastSuccess("WELCOME")
+        setCookie("token",res.token)
       }).catch((err) => {
+        ToastError("Please try again !")
         console.log("ERR:",err);
       })
     }

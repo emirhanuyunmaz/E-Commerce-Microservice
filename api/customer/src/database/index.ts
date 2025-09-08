@@ -1,4 +1,4 @@
-import {connection} from "./connection"
-module.exports ={
-    databaseConnection : connection   
-}
+import { connection } from './connection';
+module.exports = {
+  databaseConnection: connection,
+};

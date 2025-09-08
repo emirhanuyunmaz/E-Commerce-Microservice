@@ -1,30 +1,29 @@
 import express, { Request, Response } from 'express';
-import {connection} from "./database/connection"
+import { connection } from './database/connection';
 import { CreateChannel } from './utils';
 import { expess_app } from './app';
 import { config } from './config';
 
 const StartServer = async () => {
-  
-  const app = express()
-  
-  await connection()
+  const app = express();
 
-  const channel = await CreateChannel()
-  
+  await connection();
+
+  const channel = await CreateChannel();
+
   await expess_app(app);
 
-  app.listen(config.PORT, () => {
+  app
+    .listen(config.PORT, () => {
       console.log(`listening to port ${config.PORT}`);
     })
     .on('error', (err) => {
-        console.log(err);
-        process.exit();
+      console.log(err);
+      process.exit();
     })
     .on('close', () => {
-        channel.close();
-    })
+      channel.close();
+    });
+};
 
-}
-
-StartServer()
+StartServer();

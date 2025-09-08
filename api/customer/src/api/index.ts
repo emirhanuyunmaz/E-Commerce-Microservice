@@ -1,6 +1,6 @@
-import { customer } from "./customer"
-import { AppEvents } from "./app-events"
+import { customer } from './customer';
+import { AppEvents } from './app-events';
 module.exports = {
-    customer: customer,
-    appEvents: AppEvents
-}
+  customer: customer,
+  appEvents: AppEvents,
+};

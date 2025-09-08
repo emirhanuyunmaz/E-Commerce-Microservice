@@ -63,7 +63,6 @@ export default function SignupCard(){
     })
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
-      // console.log("DATA:",data);
       form.clearErrors()
       form.trigger(["password","confirmPassword"]).then(async (value) => {
         if(value){

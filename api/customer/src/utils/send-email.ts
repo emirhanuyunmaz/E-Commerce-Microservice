@@ -2,12 +2,12 @@ import nodemailer from 'nodemailer';
 import { config } from '../config';
 import { randomInt } from 'crypto';
 
-export class SendEmail{
-    createCode(): String {
-        return randomInt(10000,99999).toString();
-    }
-    htmlDesign (code:string) {
-        return `<!doctype html>
+export class SendEmail {
+  createCode(): String {
+    return randomInt(10000, 99999).toString();
+  }
+  htmlDesign(code: string) {
+    return `<!doctype html>
             <html lang="tr" xmlns="http://www.w3.org/1999/xhtml">
             <head>
             <meta charset="utf-8">
@@ -119,32 +119,32 @@ export class SendEmail{
             </table>
             </body>
             </html>
-            `
-    }
+            `;
+  }
 
-    async sendMessageVeriyEmail(email: string, code: string): Promise<boolean> {
-        const transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        host: 'smtp.gmail.com',
-        port: 587,
-        // secure: true, // true for port 465, false for other ports
-        auth: {
-            user: config.EMAIL_ADDRESS,
-            pass: config.EMAIL_PASSWORD,
-            },
-        });
+  async sendMessageVeriyEmail(email: string, code: string): Promise<boolean> {
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      // secure: true, // true for port 465, false for other ports
+      auth: {
+        user: config.EMAIL_ADDRESS,
+        pass: config.EMAIL_PASSWORD,
+      },
+    });
 
-            try {
-                const info = await transporter.sendMail({
-                    from: process.env.EMAIL_ADDRESS, 
-                    to: email, 
-                    subject: 'Shopline | Email Verify',
-                    // text: "Hello world?", 
-                    html: this.htmlDesign(code) as string, 
-                });
-                return true;
-            } catch (err) {
-                throw new Error(err as string);
-            }
-        }
+    try {
+      const info = await transporter.sendMail({
+        from: process.env.EMAIL_ADDRESS,
+        to: email,
+        subject: 'Shopline | Email Verify',
+        // text: "Hello world?",
+        html: this.htmlDesign(code) as string,
+      });
+      return true;
+    } catch (err) {
+      throw new Error(err as string);
     }
+  }
+}

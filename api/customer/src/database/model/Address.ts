@@ -1,12 +1,15 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const AddressSchema = new Schema({
+const AddressSchema = new Schema(
+  {
     street: String,
     postalCode: String,
     city: String,
-    country: String
-},{timestamps: true});
+    country: String,
+  },
+  { timestamps: true }
+);
 
-export const Customer = mongoose.model("address" , AddressSchema) 
+export const Customer = mongoose.model('address', AddressSchema);
