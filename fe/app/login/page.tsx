@@ -1,3 +1,4 @@
+'use client'
 import LoginCard from "@/components/fe/LoginCard";
 
 

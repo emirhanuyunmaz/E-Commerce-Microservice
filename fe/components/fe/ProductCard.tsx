@@ -1,3 +1,4 @@
+'use client'
 import { Eye, Heart, Star } from "lucide-react";
 import { Button } from "../ui/button";
 

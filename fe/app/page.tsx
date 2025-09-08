@@ -1,3 +1,4 @@
+'use client'
 import { Categories } from "@/components/fe/Categories";
 import { HomeCarousel } from "@/components/fe/HomeCarousel";
 import ProductCard from "@/components/fe/ProductCard";

@@ -21,6 +21,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { useCreateCustomerMutation, useSendEmailMutation, useVerifyEmailMutation } from "@/store/customer/customerApi"
+import { ToastError, ToastSuccess } from "@/lib/toast"
 
 const FormSchema = z.object({
   email: z.string().min(5, {
@@ -36,10 +38,17 @@ const FormSchema = z.object({
     message: "Confirm Password must be at least 6 characters.",
   }),
 
+}).refine((data) => data.password === data.confirmPassword,{
+    message: "Passwords don't match",
+    path: ["passwordConfirm"],
 })
 
 
 export default function SignupCard(){
+    const [sendEmail,resSendEmail] = useSendEmailMutation()
+    const [verifyEmail,resVerifyEmail] = useVerifyEmailMutation()
+    const [createCustomer,resCreateCustomer] = useCreateCustomerMutation()
+
     const router = useRouter()
     const [select,setSelect] = useState(0)
 
@@ -54,26 +63,57 @@ export default function SignupCard(){
     })
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
-      console.log("DATA:",data);
+      // console.log("DATA:",data);
+      form.clearErrors()
+      form.trigger(["password","confirmPassword"]).then(async (value) => {
+        if(value){
+          await createCustomer({email:form.getValues("email").replaceAll(" ",""),password:form.getValues("password").replaceAll(" ","")}).unwrap()
+          .then((res) => {
+            ToastSuccess("Success create new customer")
+            router.push("/login")
+          }).catch((err) => {
+            ToastError("ERROR Try Again")
+          })
+        }
+      })
     }
     
     
-    function nextButton(){
+    async function nextButton(){
       form.clearErrors()
+      
       if(select == 0){
-        form.trigger("email").then((value) => {
+        form.trigger("email").then(async (value) => {
           if(value){
-            setSelect(select + 1)
+            await sendEmail({email:form.getValues("email").replaceAll(" ","")}).unwrap()
+            .then((res) => {
+              ToastSuccess("Sended Code")
+              setSelect(select + 1)
+            }).catch((err) => {
+              ToastError("Not Send Email Try Again")
+              console.log("EMAİl:ERR:",err);
+            })
           }
         })
       }
+      
       else if (select == 1){
-        form.trigger("code").then((value) => {
+        form.clearErrors()
+        form.trigger("code").then(async (value) => {
           if(value){
-            setSelect(select + 1)
+            await verifyEmail({email:form.getValues("email").replaceAll(" ",""),code:form.getValues("code").replaceAll(" ","")}).unwrap()
+            .then((res) => {
+              ToastSuccess("Code entered is correct")
+              setSelect(select + 1)
+            }).catch((err) => {
+              ToastError("Code entered is incorrect")
+              console.log("ERR:",err);
+              
+            })
           }
         })
       }
+
     }
 
     function goToLogin(){
@@ -86,7 +126,6 @@ export default function SignupCard(){
         <CardTitle>Sign Up</CardTitle>
       </CardHeader>
 
-      
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-6">

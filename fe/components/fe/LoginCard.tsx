@@ -22,6 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { useDenemeQuery, useLoginMutation } from "@/store/customer/customerApi"
 
 const FormSchema = z.object({
   email: z.string().min(5, {
@@ -34,6 +35,12 @@ const FormSchema = z.object({
 
 export default function LoginCard() {
 
+  const deneme = useDenemeQuery("")
+  const [login,resLogin] = useLoginMutation() 
+
+  console.log(deneme.data);
+  
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -42,16 +49,14 @@ export default function LoginCard() {
     },
   })
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
+    async function onSubmit(data: z.infer<typeof FormSchema>) {
       console.log("DATA:",data);
-    
-      // toast("You submitted the following values", {
-    //   description: (
-    //     <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // })
+      await login(data).unwrap()
+      .then((res) => {
+        console.log("RES:",res);
+      }).catch((err) => {
+        console.log("ERR:",err);
+      })
     }
 
 
@@ -90,7 +95,7 @@ export default function LoginCard() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                      <Input placeholder="Password" {...field} />                          
+                      <Input type="password" placeholder="Password"  {...field} />                          
                   </FormControl>
                   <FormMessage />
                   <a
