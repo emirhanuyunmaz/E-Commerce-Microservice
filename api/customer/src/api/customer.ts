@@ -3,6 +3,7 @@ import { Application } from 'express';
 import { CustomerService } from '../service/CustomerService';
 import { createJWT, SubscribeMessage } from '../utils';
 import { SendEmail } from '../utils/send-email';
+import { AuthMiddleware } from './middleware/AuthMiddleware';
 
 export const customer = async (app: Application, channel: Channel) => {
   const service = new CustomerService();
@@ -71,4 +72,14 @@ export const customer = async (app: Application, channel: Channel) => {
       res.status(400).json({ message: 'Password is not emty' });
     }
   });
+
+
+  app.get("/profile",AuthMiddleware,async (req,res,next) => {
+    console.log("PROFILE");
+    
+    const {email} = req.headers
+    console.log("EMAIL : ",email);
+    const customer = await service.FindCustomerEmail({email:email as string})
+    return res.status(200).json({customer})
+  })
 };

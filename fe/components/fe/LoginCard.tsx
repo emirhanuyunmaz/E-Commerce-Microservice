@@ -25,6 +25,7 @@ import {
 import { useLoginMutation } from '@/store/customer/customerApi';
 import { ToastError, ToastSuccess } from '@/lib/toast';
 import { setCookie } from 'cookies-next';
+import { useRouter } from 'next/navigation';
 const FormSchema = z.object({
   email: z.string().min(5, {
     message: 'Email must be at least 5 characters.',
@@ -35,7 +36,7 @@ const FormSchema = z.object({
 });
 
 export default function LoginCard() {
-  // const navigate = useNavi
+  const router = useRouter()
   const [login, resLogin] = useLoginMutation();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -54,7 +55,7 @@ export default function LoginCard() {
         console.log('RES:', res);
         ToastSuccess('WELCOME');
         setCookie('token', res.token);
-        
+        router.refresh()
       })
       .catch((err) => {
         ToastError('Please try again !');

@@ -34,6 +34,10 @@ export class CustomerService {
     return await this.repository.FindCustomer({ email, password });
   }
 
+  async FindCustomerEmail({email}:{email:string}){
+    return await this.repository.FindCustomerEmail({email:email})
+  }
+
   async GetWishList(customerId: string) {
     // const wishListItems = await this.repository.Wishlist(customerId);
     return FormateData({ message: 'success' });

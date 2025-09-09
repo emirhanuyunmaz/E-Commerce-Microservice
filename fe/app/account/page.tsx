@@ -10,14 +10,22 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useGetProfileQuery } from '@/store/customer/customerApi';
 import { getCookie } from 'cookies-next';
 import { SlashIcon } from 'lucide-react';
 import Link from 'next/link';
 import { unauthorized } from 'next/navigation';
+// import { jwt } from 'zod';
+import { isValidJWT } from 'zod/v4/core';
 
 export default function Page() {
-  // Token verify edilip bakılması gerek
-  if (getCookie('token') == undefined) {
+   
+  let token = getCookie('token') ?? "" 
+  let isValid = isValidJWT(token as  string)
+  const profile = useGetProfileQuery({token:token})
+  console.log(profile.data);
+  
+  if (isValid == undefined) {
     unauthorized();
   }
 
