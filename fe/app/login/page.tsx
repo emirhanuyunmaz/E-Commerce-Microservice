@@ -1,9 +1,10 @@
-'use client'
-import LoginCard from "@/components/fe/LoginCard";
+'use client';
+import LoginCard from '@/components/fe/LoginCard';
 
-
-export default function Page(){
-    return(<div className="w-full min-h-[80vh] flex justify-center items-center ">
-            <LoginCard/>
-    </div>)
+export default function Page() {
+  return (
+    <div className="flex min-h-[80vh] w-full items-center justify-center">
+      <LoginCard />
+    </div>
+  );
 }
