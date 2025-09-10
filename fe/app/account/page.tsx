@@ -11,12 +11,43 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useGetProfileQuery } from '@/store/customer/customerApi';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { getCookie } from 'cookies-next';
 import { SlashIcon } from 'lucide-react';
 import Link from 'next/link';
 import { unauthorized } from 'next/navigation';
-// import { jwt } from 'zod';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import z from 'zod';
 import { isValidJWT } from 'zod/v4/core';
+
+const FormSchema = z.object({
+  name: z.string().min(3, {
+    message: 'Name must be at least 3 characters.',
+  }),
+  surname: z.string().min(5, {
+    message: 'Surname must be at least 5 characters.',
+  }),
+  email: z.string().min(5, {
+    message: 'Email must be at least 5 characters.',
+  }),
+  phone: z.string().min(5, {
+    message: 'Phone must be at least 5 characters.',
+  }),
+  address: z.string().min(5, {
+    message: 'Surname must be at least 5 characters.',
+  }),
+  
+});
+
 
 export default function Page() {
    
@@ -24,85 +55,135 @@ export default function Page() {
   let isValid = isValidJWT(token as  string)
   const profile = useGetProfileQuery({token:token})
   console.log(profile.data);
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+      resolver: zodResolver(FormSchema),
+      defaultValues: {
+        email: '',
+        address:'',
+        phone:'',
+        name:'',
+        surname:'',
+      },
+  });
+  
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+      console.log('DATA:', data);
+
+    }
   
   if (isValid == undefined) {
     unauthorized();
   }
 
+  useEffect(() => {
+    if(profile.isSuccess){
+      console.log(profile.data.email);
+      
+      form.setValue("email",profile.data?.email)
+      form.setValue("phone",profile.data?.phone)
+      form.setValue("address",profile.data?.address)
+      form.setValue("name",profile.data?.name)
+      form.setValue("surname",profile.data?.surname)
+    }
+  },[profile.isFetching,profile.isSuccess,profile.isError])
+
   return (
-    <div className="mx-auto min-h-[80vh] max-w-7xl">
-      <div className="my-16">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/" className="text-gray-400">
-                  Home
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <SlashIcon />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <p>Account</p>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
+    <div className="">
+      
 
       <div className="flex gap-3">
         {/* PROFILE - INPUT */}
-        <div className="flex w-1/5 flex-col gap-5">
-          <div className="flex flex-col gap-3">
-            <h4>Manage My Account</h4>
-            <ul className="ms-5 flex flex-col gap-3 text-gray-400">
-              <li className="cursor-pointer hover:text-black">My Profile</li>
-              <li className="cursor-pointer hover:text-black">Address Book</li>
-              <li className="cursor-pointer hover:text-black">Change Password</li>
-            </ul>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <h4>My Orders</h4>
-            <ul className="ms-5 flex flex-col gap-3 text-gray-400">
-              <li className="cursor-pointer hover:text-black">My Returns</li>
-              <li className="cursor-pointer hover:text-black">My Collections</li>
-            </ul>
-          </div>
-        </div>
+        
 
         {/* NAVIGATION */}
-        <div className="flex w-2/3 flex-col gap-3 p-10 shadow-xl">
+        <div className="flex w-full flex-col gap-3 p-10 shadow-xl">
           <div>
             <p className="text-secondary">Edit Your Profile</p>
           </div>
           <div className="grid grid-cols-1 gap-3">
             <div>
-              <Label htmlFor="name">Name</Label>
-              <Input type="text" id="text" placeholder="Name" />
-            </div>
+              <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Name" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-            <div>
-              <Label htmlFor="surname">Surname</Label>
-              <Input type="text" id="surname" placeholder="Surname" />
-            </div>
+                    <FormField
+                      control={form.control}
+                      name="surname"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Surname</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Surname" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Email" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Phone" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Address</FormLabel>
+                          <FormControl>
+                            <Textarea placeholder="Address" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input type="email" id="email" placeholder="Email" />
-            </div>
-
-            <div>
-              <Label htmlFor="address">Address</Label>
-              <Textarea id="address" placeholder="Address" />
-            </div>
-            <div className="flex justify-end">
-              <Button variant={'secondary'} className="text-white">
-                Save Change
-              </Button>
+                    <div className="flex justify-end">
+                      <Button type='submit' variant={'secondary'} className="text-white">
+                        Save Change
+                      </Button>
+                  </div>
+                  </form>
+                </Form>
+                      
             </div>
           </div>
         </div>

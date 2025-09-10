@@ -80,6 +80,6 @@ export const customer = async (app: Application, channel: Channel) => {
     const {email} = req.headers
     console.log("EMAIL : ",email);
     const customer = await service.FindCustomerEmail({email:email as string})
-    return res.status(200).json({customer})
+    return res.status(200).json(customer)
   })
 };

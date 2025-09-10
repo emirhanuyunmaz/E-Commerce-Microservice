@@ -1,10 +1,24 @@
+'use client'
 import { Input } from '../ui/input';
 import Icon from './Icon';
 import { Heart, ShoppingCart } from 'lucide-react';
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import { getCookie } from 'cookies-next';
+import { isValidJWT } from 'zod/v4/core';
+import { useEffect, useState } from 'react';
 
 export default function Navbar() {
+   
+  let token = getCookie('token') ?? "" 
+  const isValid = isValidJWT(token as  string)
+
+  const [validate,setValidate] = useState( false )
+  useEffect(() => {
+    setValidate(isValid)
+  },[token])
+
+
   return (
     <header className="border-b-1 border-gray-400">
       <div className="mx-auto flex max-w-7xl justify-between py-3">
@@ -23,9 +37,11 @@ export default function Navbar() {
             <li>
               <Link href={`/about`}>About</Link>
             </li>
-            <li>
+            {!validate? <><li>
               <Link href={`/login`}>Login</Link>
-            </li>
+            </li></>: <li>
+              <Link href={`/account`}>Account</Link>
+            </li>}
           </ul>
         </div>
 
