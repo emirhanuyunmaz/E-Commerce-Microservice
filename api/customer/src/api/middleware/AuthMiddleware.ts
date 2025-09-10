@@ -3,6 +3,8 @@ import { jwtDecode } from "../../utils";
 
 export async function AuthMiddleware (req:Request,res:Response,next:NextFunction):Promise<any> {
     const {token} = req.headers
+    // console.log("TT:",token);
+    
     if(token){
         const isAuthorized = await jwtDecode({token:token as string})
         console.log("isAuthorized:::::",isAuthorized);

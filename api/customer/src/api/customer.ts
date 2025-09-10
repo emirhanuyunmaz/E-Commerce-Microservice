@@ -4,6 +4,7 @@ import { CustomerService } from '../service/CustomerService';
 import { createJWT, SubscribeMessage } from '../utils';
 import { SendEmail } from '../utils/send-email';
 import { AuthMiddleware } from './middleware/AuthMiddleware';
+import mongoose, { ObjectId } from 'mongoose';
 
 export const customer = async (app: Application, channel: Channel) => {
   const service = new CustomerService();
@@ -52,7 +53,6 @@ export const customer = async (app: Application, channel: Channel) => {
     const { email, code } = req.body;
 
     const result = await service.VerifyEmailCode({ email, code });
-    console.log('RESS:', result);
 
     if (result) {
       return res.status(200).json({ message: 'success' });
@@ -63,7 +63,6 @@ export const customer = async (app: Application, channel: Channel) => {
 
   app.post('/createCustomer', async (req, res, next) => {
     const { email, password } = req.body;
-    console.log('CREATE');
 
     if (password != '') {
       await service.CreateCustomer({ email, password });
@@ -74,12 +73,40 @@ export const customer = async (app: Application, channel: Channel) => {
   });
 
 
-  app.get("/profile",AuthMiddleware,async (req,res,next) => {
-    console.log("PROFILE");
-    
+  app.get("/profile",AuthMiddleware,async (req,res,next) => {    
     const {email} = req.headers
-    console.log("EMAIL : ",email);
     const customer = await service.FindCustomerEmail({email:email as string})
     return res.status(200).json(customer)
+  });
+
+  app.post("/updateProfile",async (req,res,next) => {
+    const {name , surname , email , phone} = req.body
+    const customer = await service.CustomerUpdateProfile({email,name,surname,phone})
+    res.status(201).json(customer)
   })
+
+  app.post("/addAddress",AuthMiddleware,async(req,res,next) => {
+    const {street,postalCode,city,country,fullAddress} = req.body
+    const {email} = req.headers
+    if(email){
+      const user = await service.FindCustomerEmail({email:email as string})
+      const userId = user!._id.toString()
+      const newAddress = await service.AddAddress({userId:userId ,street:street,postalCode:postalCode,city:city,country:country,fullAddress:fullAddress})
+      return res.status(201).json(newAddress)
+    }else{
+      return res.status(404).json({message:"Not authorized"})
+    }
+  })
+
+  app.get("/addressList",AuthMiddleware,async(req,res,next) => {
+    const {email} = req.headers
+    if(email){
+      const user = await service.FindCustomerEmail({email:email as string})
+      const userId = user!._id.toString()
+      const addressList = await service.AddressList({userId:userId})
+      return res.status(200).json(addressList)
+    }
+    return res.status(404).json({message:"Not authorized"})
+  })
+
 };

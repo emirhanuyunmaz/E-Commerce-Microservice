@@ -1,20 +1,10 @@
 'use client';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useGetProfileQuery } from '@/store/customer/customerApi';
+import { useGetProfileQuery, useUpdateProfileMutation } from '@/store/customer/customerApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getCookie } from 'cookies-next';
-import { SlashIcon } from 'lucide-react';
-import Link from 'next/link';
+
 import { unauthorized } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -28,6 +18,7 @@ import {
 } from '@/components/ui/form';
 import z from 'zod';
 import { isValidJWT } from 'zod/v4/core';
+import { ToastSuccess } from '@/lib/toast';
 
 const FormSchema = z.object({
   name: z.string().min(3, {
@@ -41,26 +32,22 @@ const FormSchema = z.object({
   }),
   phone: z.string().min(5, {
     message: 'Phone must be at least 5 characters.',
-  }),
-  address: z.string().min(5, {
-    message: 'Surname must be at least 5 characters.',
-  }),
-  
+  }),  
 });
 
 
 export default function Page() {
-   
+  const [updateProfile,resUpdateprofile] = useUpdateProfileMutation() 
+
   let token = getCookie('token') ?? "" 
   let isValid = isValidJWT(token as  string)
-  const profile = useGetProfileQuery({token:token})
-  console.log(profile.data);
+  const profile = useGetProfileQuery("")
+  // console.log(profile.data);
 
   const form = useForm<z.infer<typeof FormSchema>>({
       resolver: zodResolver(FormSchema),
       defaultValues: {
         email: '',
-        address:'',
         phone:'',
         name:'',
         surname:'',
@@ -70,7 +57,15 @@ export default function Page() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
       console.log('DATA:', data);
-
+      await updateProfile(data).unwrap()
+      .then((res) => {
+        console.log("ADSDA:",res);
+        
+        ToastSuccess("Update Profile is Success")
+      }).catch((err) => {
+        console.log("ERR:",err);
+        
+      })
     }
   
   if (isValid == undefined) {
@@ -78,12 +73,9 @@ export default function Page() {
   }
 
   useEffect(() => {
-    if(profile.isSuccess){
-      console.log(profile.data.email);
-      
+    if(profile.isSuccess){      
       form.setValue("email",profile.data?.email)
       form.setValue("phone",profile.data?.phone)
-      form.setValue("address",profile.data?.address)
       form.setValue("name",profile.data?.name)
       form.setValue("surname",profile.data?.surname)
     }
@@ -93,9 +85,7 @@ export default function Page() {
     <div className="">
       
 
-      <div className="flex gap-3">
-        {/* PROFILE - INPUT */}
-        
+      <div className="flex gap-3">        
 
         {/* NAVIGATION */}
         <div className="flex w-full flex-col gap-3 p-10 shadow-xl">
@@ -141,7 +131,7 @@ export default function Page() {
                         <FormItem>
                           <FormLabel>Email</FormLabel>
                           <FormControl>
-                            <Input placeholder="Email" {...field} />
+                            <Input placeholder="Email" disabled {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -156,20 +146,6 @@ export default function Page() {
                           <FormLabel>Phone</FormLabel>
                           <FormControl>
                             <Input placeholder="Phone" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="address"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Address</FormLabel>
-                          <FormControl>
-                            <Textarea placeholder="Address" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongoose';
+import { Address } from '../model/Address';
 import { Customer } from '../model/Customer';
 import { EmailCode } from '../model/EmailCode';
 
@@ -44,4 +46,26 @@ export class CustomerRepository {
       return false;
     }
   }
+
+  async UpdateProfile({email,name,surname,phone}:{email:string,name:string,surname:string,phone:string}){    
+    return await Customer.findOneAndUpdate({email:email},{name:name,surname:surname,phone:phone})
+  }
+
+  async AddAddress({userId,street,postalCode,city,country,fullAddress}:{userId:string,street:string,postalCode:string,city:string,country:string,fullAddress:string}){
+    const newAddress = new Address({
+      userId:userId,
+      city:city,
+      country:country,
+      fullAddress:fullAddress,
+      postalCode:postalCode,
+      street:street
+    })
+    await newAddress.save()
+    return newAddress
+  }
+
+  async AddressList({userId}:{userId:string}){
+    return await Address.find({userId:userId})
+  }
+
 }

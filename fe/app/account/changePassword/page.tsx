@@ -46,7 +46,8 @@ export default function Page(){
       }
 
 
-    return (<div>
+    return (<div className="shadow-xl p-5">
+        <p className="text-secondary  my-3">Change Password</p>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField

@@ -23,27 +23,32 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import z from "zod"
 import { Textarea } from "../ui/textarea";
+import { useAddAddressMutation } from "@/store/customer/customerApi";
+import { ToastError, ToastSuccess } from "@/lib/toast";
 
 const FormSchema = z.object({
   street: z.string().min(3, {
-    message: 'Name must be at least 3 characters.',
+    message: 'Name must be at least 2 characters.',
   }),
   postalCode: z.string().min(5, {
-    message: 'Surname must be at least 5 characters.',
+    message: 'Surname must be at least 2 characters.',
   }),
   city: z.string().min(5, {
-    message: 'Email must be at least 5 characters.',
+    message: 'Email must be at least 2 characters.',
   }),
   country: z.string().min(5, {
-    message: 'Phone must be at least 5 characters.',
+    message: 'Phone must be at least 2 characters.',
   }),
-  text: z.string().min(5, {
-    message: 'Surname must be at least 5 characters.',
+  fullAddress: z.string().min(5, {
+    message: 'Full Address must be at least 5 characters.',
   }),
   
 });
 
 export default function AddAddress(){
+
+  const [addAddress,resAddAddress] = useAddAddressMutation()
+
     const form = useForm<z.infer<typeof FormSchema>>({
           resolver: zodResolver(FormSchema),
           defaultValues: {
@@ -54,6 +59,14 @@ export default function AddAddress(){
     
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         console.log('DATA:', data);
+        await addAddress(data).unwrap()
+        .then((res) => {
+          console.log("RES:",res);
+          ToastSuccess("Add Address is Success")
+        }).catch((err) => {
+          console.log("ERR:",err);
+          ToastError("ERROR")
+        })
     }
     return (<Dialog >
         <DialogTrigger asChild>
@@ -127,12 +140,12 @@ export default function AddAddress(){
                 
                 <FormField
                     control={form.control}
-                    name="text"
+                    name="fullAddress"
                     render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Text</FormLabel>
+                        <FormLabel>Full Address</FormLabel>
                         <FormControl>
-                        <Textarea placeholder="Text" {...field} />
+                        <Textarea placeholder="Full Address" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>

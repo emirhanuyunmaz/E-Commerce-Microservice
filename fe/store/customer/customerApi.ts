@@ -1,9 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { getCookie } from 'cookies-next';
 
 // Define a service using a base URL and expected endpoints
 export const customerApi = createApi({
   reducerPath: 'customerApi',
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BASE_URL + 'customer' }),
+  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BASE_URL + 'customer' ,
+    prepareHeaders: (headers) => {
+      headers.set('token', getCookie("token") as string)
+      return headers
+    }}),
 
   endpoints: (build) => ({
     deneme: build.query<any, any>({
@@ -43,12 +48,32 @@ export const customerApi = createApi({
     }),
 
     getProfile:build.query({
-      query:(headers) => ({
+      query:() => ({
         url:`/profile`,
-        headers:headers
       })
       
-    })
+    }),
+
+    updateProfile:build.mutation({
+      query:(body) => ({
+        url:"/updateProfile",
+        method:"POST",
+        body:body,
+      })
+    }),
+
+    addAddress:build.mutation({
+      query:(body) => ({
+        url:"/addAddress",
+        method:"POST",
+        body:body
+      })
+    }),
+
+    getAddressList:build.query({
+      query:() => `/addressList`
+    }),
+
 
   }),
 });
@@ -59,5 +84,8 @@ export const {
   useSendEmailMutation,
   useVerifyEmailMutation,
   useCreateCustomerMutation,
-  useGetProfileQuery
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+  useAddAddressMutation,
+  useGetAddressListQuery
 } = customerApi;

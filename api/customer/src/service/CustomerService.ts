@@ -38,6 +38,18 @@ export class CustomerService {
     return await this.repository.FindCustomerEmail({email:email})
   }
 
+  async CustomerUpdateProfile({email,name,surname,phone}:{email:string,name:string,surname:string,phone:string}){
+    return await this.repository.UpdateProfile({email:email,name:name,surname:surname,phone:phone})
+  }
+
+  async AddAddress({userId,street,postalCode,city,country,fullAddress}:{userId:string,street:string,postalCode:string,city:string,country:string,fullAddress:string}){
+    return await this.repository.AddAddress({userId:userId,street:street,postalCode:postalCode,city:city,country:country,fullAddress:fullAddress})
+  }
+
+  async AddressList({userId}:{userId:string}){
+    return this.repository.AddressList({userId})
+  }
+
   async GetWishList(customerId: string) {
     // const wishListItems = await this.repository.Wishlist(customerId);
     return FormateData({ message: 'success' });
