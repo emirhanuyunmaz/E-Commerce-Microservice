@@ -20,7 +20,7 @@ export default function Page(){
          <div className="flex gap-5 flex-wrap">
             
             {getAddressList.isSuccess && getAddressList.data.map((data:any) =><AddressCard key={data._id} {...data}/> )}
-            
+            {getAddressList.isSuccess && getAddressList.data.length == 0 && <p>Address Not Found</p>}
             
          </div>
     </div>)

@@ -68,4 +68,12 @@ export class CustomerRepository {
     return await Address.find({userId:userId})
   }
 
+  async UpdatePassword({email,newPassword}:{email:string,newPassword:string}){
+    return await Customer.findOneAndUpdate({email:email},{password:newPassword})
+  }
+
+  async CustomerOldPassword({email}:{email:string}){
+    return await Customer.findOne({email:email},"password")
+  }
+
 }

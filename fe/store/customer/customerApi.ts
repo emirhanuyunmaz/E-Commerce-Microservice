@@ -74,6 +74,14 @@ export const customerApi = createApi({
       query:() => `/addressList`
     }),
 
+    updatePassword:build.mutation({
+      query:(body) => ({
+        url:"/updatePassword",
+        method:"POST",
+        body:body
+      })
+    })
+
 
   }),
 });
@@ -87,5 +95,6 @@ export const {
   useGetProfileQuery,
   useUpdateProfileMutation,
   useAddAddressMutation,
-  useGetAddressListQuery
+  useGetAddressListQuery,
+  useUpdatePasswordMutation
 } = customerApi;

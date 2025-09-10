@@ -12,6 +12,8 @@ import {
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useUpdatePasswordMutation } from "@/store/customer/customerApi";
+import { ToastError, ToastSuccess } from "@/lib/toast";
 
 
 const FormSchema = z.object({
@@ -26,11 +28,13 @@ const FormSchema = z.object({
   }),
 })  .refine((data) => data.newPassword === data.newPasswordConfirm, {
     message: "Passwords don't match",
-    path: ['passwordConfirm'],
+    path: ['newPasswordConfirm'],
   });
 
 
 export default function Page(){
+    
+    const [updatePassword,resUpdatePassword] = useUpdatePasswordMutation()
 
       const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -43,11 +47,17 @@ export default function Page(){
     
       async function onSubmit(data: z.infer<typeof FormSchema>) {
         console.log('DATA:', data);
-      }
+        await updatePassword(data).unwrap()
+        .then((res) => {
+            ToastSuccess("Password updated")
+        }).catch((err) => {
+            ToastError("ERROR Try Again")
+        })
+    }
 
 
     return (<div className="shadow-xl p-5">
-        <p className="text-secondary  my-3">Change Password</p>
+        <p className="text-secondary my-3">Change Password</p>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField

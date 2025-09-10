@@ -47,7 +47,15 @@ export class CustomerService {
   }
 
   async AddressList({userId}:{userId:string}){
-    return this.repository.AddressList({userId})
+    return await this.repository.AddressList({userId})
+  }
+
+  async UpdatePassword({email,newPassword}:{email:string,newPassword:string}){
+    return await this.repository.UpdatePassword({email:email,newPassword:newPassword})
+  }
+
+  async CustomerOldPassword({email}:{email:string}){
+    return await this.repository.CustomerOldPassword({email:email})
   }
 
   async GetWishList(customerId: string) {

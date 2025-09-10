@@ -58,7 +58,6 @@ export default function AddAddress(){
       
     
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        console.log('DATA:', data);
         await addAddress(data).unwrap()
         .then((res) => {
           console.log("RES:",res);

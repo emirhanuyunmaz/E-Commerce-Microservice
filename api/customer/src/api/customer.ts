@@ -72,7 +72,6 @@ export const customer = async (app: Application, channel: Channel) => {
     }
   });
 
-
   app.get("/profile",AuthMiddleware,async (req,res,next) => {    
     const {email} = req.headers
     const customer = await service.FindCustomerEmail({email:email as string})
@@ -107,6 +106,30 @@ export const customer = async (app: Application, channel: Channel) => {
       return res.status(200).json(addressList)
     }
     return res.status(404).json({message:"Not authorized"})
+  })
+
+  app.post("/updatePassword",AuthMiddleware,async(req,res,next) => {
+    const {newPassword,oldPassword} = req.body
+    const {email} = req.headers
+    if(email){
+      const getOldPassword = await service.CustomerOldPassword({email:email as string})
+      if(oldPassword == getOldPassword?.password){
+
+        if(getOldPassword){
+          console.log("OLD PASSWORD:",getOldPassword?.password);
+          await service.UpdatePassword({email:email as string,newPassword:newPassword})
+          return res.status(200).json({message:"success"})
+        }
+        else{
+          return res.status(404).json({message:"ERROR"})
+        }
+      }else{
+        res.status(400).json({message:"Password not matches"})
+      }
+    }
+    else{
+      return res.status(404).json({message:"ERROR"})
+    }
   })
 
 };

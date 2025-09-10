@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/form';
 import z from 'zod';
 import { isValidJWT } from 'zod/v4/core';
-import { ToastSuccess } from '@/lib/toast';
+import { ToastError, ToastSuccess } from '@/lib/toast';
 
 const FormSchema = z.object({
   name: z.string().min(3, {
@@ -56,15 +56,12 @@ export default function Page() {
   
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-      console.log('DATA:', data);
       await updateProfile(data).unwrap()
       .then((res) => {
-        console.log("ADSDA:",res);
-        
         ToastSuccess("Update Profile is Success")
       }).catch((err) => {
         console.log("ERR:",err);
-        
+        ToastError("ERROR")        
       })
     }
   
