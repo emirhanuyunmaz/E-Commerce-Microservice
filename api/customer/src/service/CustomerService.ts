@@ -34,28 +34,73 @@ export class CustomerService {
     return await this.repository.FindCustomer({ email, password });
   }
 
-  async FindCustomerEmail({email}:{email:string}){
-    return await this.repository.FindCustomerEmail({email:email})
+  async FindCustomerEmail({ email }: { email: string }) {
+    return await this.repository.FindCustomerEmail({ email: email });
   }
 
-  async CustomerUpdateProfile({email,name,surname,phone}:{email:string,name:string,surname:string,phone:string}){
-    return await this.repository.UpdateProfile({email:email,name:name,surname:surname,phone:phone})
+  async CustomerUpdateProfile({
+    email,
+    name,
+    surname,
+    phone,
+  }: {
+    email: string;
+    name: string;
+    surname: string;
+    phone: string;
+  }) {
+    return await this.repository.UpdateProfile({
+      email: email,
+      name: name,
+      surname: surname,
+      phone: phone,
+    });
   }
 
-  async AddAddress({userId,street,postalCode,city,country,fullAddress}:{userId:string,street:string,postalCode:string,city:string,country:string,fullAddress:string}){
-    return await this.repository.AddAddress({userId:userId,street:street,postalCode:postalCode,city:city,country:country,fullAddress:fullAddress})
+  async AddAddress({
+    userId,
+    street,
+    postalCode,
+    city,
+    country,
+    fullAddress,
+  }: {
+    userId: string;
+    street: string;
+    postalCode: string;
+    city: string;
+    country: string;
+    fullAddress: string;
+  }) {
+    return await this.repository.AddAddress({
+      userId: userId,
+      street: street,
+      postalCode: postalCode,
+      city: city,
+      country: country,
+      fullAddress: fullAddress,
+    });
   }
 
-  async AddressList({userId}:{userId:string}){
-    return await this.repository.AddressList({userId})
+  async AddressList({ userId }: { userId: string }) {
+    return await this.repository.AddressList({ userId });
   }
 
-  async UpdatePassword({email,newPassword}:{email:string,newPassword:string}){
-    return await this.repository.UpdatePassword({email:email,newPassword:newPassword})
+  async UpdatePassword({
+    email,
+    newPassword,
+  }: {
+    email: string;
+    newPassword: string;
+  }) {
+    return await this.repository.UpdatePassword({
+      email: email,
+      newPassword: newPassword,
+    });
   }
 
-  async CustomerOldPassword({email}:{email:string}){
-    return await this.repository.CustomerOldPassword({email:email})
+  async CustomerOldPassword({ email }: { email: string }) {
+    return await this.repository.CustomerOldPassword({ email: email });
   }
 
   async GetWishList(customerId: string) {

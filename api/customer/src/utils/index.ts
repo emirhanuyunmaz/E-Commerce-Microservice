@@ -26,14 +26,14 @@ export const createJWT = ({
   return token;
 };
 
-export const jwtDecode = async ({token}:{token:string}):Promise<{ email: string  }| any> => {
-    
-    const decode = await jwt.verify(token, config.SECRET_KEY as string);
-    return decode
-  
-  
+export const jwtDecode = async ({
+  token,
+}: {
+  token: string;
+}): Promise<{ email: string } | any> => {
+  const decode = await jwt.verify(token, config.SECRET_KEY as string);
+  return decode;
 };
-
 
 export const FormateData = (data: any) => {
   if (data) {

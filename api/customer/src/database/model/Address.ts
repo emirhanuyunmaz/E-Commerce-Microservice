@@ -4,12 +4,12 @@ const Schema = mongoose.Schema;
 
 const AddressSchema = new Schema(
   {
-    userId:{type: mongoose.Schema.Types.ObjectId , ref: 'customer'},
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'customer' },
     street: String,
     postalCode: String,
     city: String,
     country: String,
-    fullAddress:String
+    fullAddress: String,
   },
   { timestamps: true }
 );

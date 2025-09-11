@@ -4,11 +4,13 @@ import { getCookie } from 'cookies-next';
 // Define a service using a base URL and expected endpoints
 export const customerApi = createApi({
   reducerPath: 'customerApi',
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BASE_URL + 'customer' ,
+  baseQuery: fetchBaseQuery({
+    baseUrl: process.env.NEXT_PUBLIC_BASE_URL + 'customer',
     prepareHeaders: (headers) => {
-      headers.set('token', getCookie("token") as string)
-      return headers
-    }}),
+      headers.set('token', getCookie('token') as string);
+      return headers;
+    },
+  }),
 
   endpoints: (build) => ({
     deneme: build.query<any, any>({
@@ -47,42 +49,39 @@ export const customerApi = createApi({
       }),
     }),
 
-    getProfile:build.query({
-      query:() => ({
-        url:`/profile`,
-      })
-      
+    getProfile: build.query({
+      query: () => ({
+        url: `/profile`,
+      }),
     }),
 
-    updateProfile:build.mutation({
-      query:(body) => ({
-        url:"/updateProfile",
-        method:"POST",
-        body:body,
-      })
+    updateProfile: build.mutation({
+      query: (body) => ({
+        url: '/updateProfile',
+        method: 'POST',
+        body: body,
+      }),
     }),
 
-    addAddress:build.mutation({
-      query:(body) => ({
-        url:"/addAddress",
-        method:"POST",
-        body:body
-      })
+    addAddress: build.mutation({
+      query: (body) => ({
+        url: '/addAddress',
+        method: 'POST',
+        body: body,
+      }),
     }),
 
-    getAddressList:build.query({
-      query:() => `/addressList`
+    getAddressList: build.query({
+      query: () => `/addressList`,
     }),
 
-    updatePassword:build.mutation({
-      query:(body) => ({
-        url:"/updatePassword",
-        method:"POST",
-        body:body
-      })
-    })
-
-
+    updatePassword: build.mutation({
+      query: (body) => ({
+        url: '/updatePassword',
+        method: 'POST',
+        body: body,
+      }),
+    }),
   }),
 });
 
@@ -96,5 +95,5 @@ export const {
   useUpdateProfileMutation,
   useAddAddressMutation,
   useGetAddressListQuery,
-  useUpdatePasswordMutation
+  useUpdatePasswordMutation,
 } = customerApi;

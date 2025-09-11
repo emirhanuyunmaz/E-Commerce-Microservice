@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { Input } from '../ui/input';
 import Icon from './Icon';
 import { Heart, ShoppingCart } from 'lucide-react';
@@ -9,15 +9,13 @@ import { isValidJWT } from 'zod/v4/core';
 import { useEffect, useState } from 'react';
 
 export default function Navbar() {
-   
-  let token = getCookie('token') ?? "" 
-  const isValid = isValidJWT(token as  string)
+  let token = getCookie('token') ?? '';
+  const isValid = isValidJWT(token as string);
 
-  const [validate,setValidate] = useState( false )
+  const [validate, setValidate] = useState(false);
   useEffect(() => {
-    setValidate(isValid)
-  },[token])
-
+    setValidate(isValid);
+  }, [token]);
 
   return (
     <header className="border-b-1 border-gray-400">
@@ -37,11 +35,17 @@ export default function Navbar() {
             <li>
               <Link href={`/about`}>About</Link>
             </li>
-            {!validate? <><li>
-              <Link href={`/login`}>Login</Link>
-            </li></>: <li>
-              <Link href={`/account`}>Account</Link>
-            </li>}
+            {!validate ? (
+              <>
+                <li>
+                  <Link href={`/login`}>Login</Link>
+                </li>
+              </>
+            ) : (
+              <li>
+                <Link href={`/account`}>Account</Link>
+              </li>
+            )}
           </ul>
         </div>
 

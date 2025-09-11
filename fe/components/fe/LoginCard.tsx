@@ -37,7 +37,7 @@ const FormSchema = z.object({
 });
 
 export default function LoginCard() {
-  const router = useRouter()
+  const router = useRouter();
   const [login, resLogin] = useLoginMutation();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -56,7 +56,7 @@ export default function LoginCard() {
         console.log('RES:', res);
         ToastSuccess('WELCOME');
         setCookie('token', res.token);
-        router.refresh()
+        router.refresh();
       })
       .catch((err) => {
         ToastError('Please try again !');

@@ -47,33 +47,68 @@ export class CustomerRepository {
     }
   }
 
-  async UpdateProfile({email,name,surname,phone}:{email:string,name:string,surname:string,phone:string}){    
-    return await Customer.findOneAndUpdate({email:email},{name:name,surname:surname,phone:phone})
+  async UpdateProfile({
+    email,
+    name,
+    surname,
+    phone,
+  }: {
+    email: string;
+    name: string;
+    surname: string;
+    phone: string;
+  }) {
+    return await Customer.findOneAndUpdate(
+      { email: email },
+      { name: name, surname: surname, phone: phone }
+    );
   }
 
-  async AddAddress({userId,street,postalCode,city,country,fullAddress}:{userId:string,street:string,postalCode:string,city:string,country:string,fullAddress:string}){
+  async AddAddress({
+    userId,
+    street,
+    postalCode,
+    city,
+    country,
+    fullAddress,
+  }: {
+    userId: string;
+    street: string;
+    postalCode: string;
+    city: string;
+    country: string;
+    fullAddress: string;
+  }) {
     const newAddress = new Address({
-      userId:userId,
-      city:city,
-      country:country,
-      fullAddress:fullAddress,
-      postalCode:postalCode,
-      street:street
-    })
-    await newAddress.save()
-    return newAddress
+      userId: userId,
+      city: city,
+      country: country,
+      fullAddress: fullAddress,
+      postalCode: postalCode,
+      street: street,
+    });
+    await newAddress.save();
+    return newAddress;
   }
 
-  async AddressList({userId}:{userId:string}){
-    return await Address.find({userId:userId})
+  async AddressList({ userId }: { userId: string }) {
+    return await Address.find({ userId: userId });
   }
 
-  async UpdatePassword({email,newPassword}:{email:string,newPassword:string}){
-    return await Customer.findOneAndUpdate({email:email},{password:newPassword})
+  async UpdatePassword({
+    email,
+    newPassword,
+  }: {
+    email: string;
+    newPassword: string;
+  }) {
+    return await Customer.findOneAndUpdate(
+      { email: email },
+      { password: newPassword }
+    );
   }
 
-  async CustomerOldPassword({email}:{email:string}){
-    return await Customer.findOne({email:email},"password")
+  async CustomerOldPassword({ email }: { email: string }) {
+    return await Customer.findOne({ email: email }, 'password');
   }
-
 }
